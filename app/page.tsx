@@ -3,16 +3,16 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Star } from "lucide-react";
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationPrevious, PaginationNext, PaginationEllipsis } from "@/components/ui/pagination";
-interface Product {
-  id: number;
-  name: string;
-  imageUrl: string;
-  price: number;
-  discount: number;
-  rating: number;
-  reviews: number;
-}
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationPrevious,
+  PaginationNext,
+  PaginationEllipsis,
+} from "@/components/ui/pagination";
+import { Product } from "@/interface/Product";
 
 const fetchProducts = async (page: number, limit: number) => {
   return new Promise<Product[]>((resolve) => {
@@ -24,7 +24,7 @@ const fetchProducts = async (page: number, limit: number) => {
         const price = Math.floor(oldPrice * (1 - discount / 100));
         return {
           id,
-          name: `Quần bò jean ống xuông ống rộng Hari đủ màu`,
+          name: `Bộ xửng hấp Yoko 2 tầng INOCHI thiết kế đơn giản cực kỳ tiện ích`,
           imageUrl: "/Image.png",
           price,
           discount,
@@ -120,40 +120,43 @@ export default function ProductList() {
           </div>
         ))}
       </div>
-      <Pagination className="mt-6 flex justify-center">
-  <PaginationContent>
-    <PaginationItem>
-      <PaginationPrevious
-        onClick={() => page > 1 && setPage(page - 1)}
-        aria-disabled={page === 1}
-        className={page === 1 ? "pointer-events-none opacity-50" : ""}
-      />
-    </PaginationItem>
 
-    {getPageNumbers().map((pageNum, index) =>
-      typeof pageNum === "number" ? (
-        <PaginationItem key={index}>
-          <PaginationLink onClick={() => setPage(pageNum)} isActive={pageNum === page}>
-            {pageNum}
-          </PaginationLink>
-        </PaginationItem>
-      ) : (
-        <PaginationItem key={index}>
-          <PaginationEllipsis />
-        </PaginationItem>
-      )
-    )}
+      {/* Pagination */}
+      <div className="flex justify-between items-center mt-6">
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                onClick={() => page > 1 && setPage(page - 1)}
+                aria-disabled={page === 1}
+                className={page === 1 ? "pointer-events-none opacity-50" : ""}
+              />
+            </PaginationItem>
 
-    <PaginationItem>
-      <PaginationNext
-        onClick={() => page < totalPages && setPage(page + 1)}
-        aria-disabled={page === totalPages}
-        className={page === totalPages ? "pointer-events-none opacity-50" : ""}
-      />
-    </PaginationItem>
-  </PaginationContent>
-</Pagination>
+            {getPageNumbers().map((pageNum, index) =>
+              typeof pageNum === "number" ? (
+                <PaginationItem key={index}>
+                  <PaginationLink onClick={() => setPage(pageNum)} isActive={pageNum === page}>
+                    {pageNum}
+                  </PaginationLink>
+                </PaginationItem>
+              ) : (
+                <PaginationItem key={index}>
+                  <PaginationEllipsis />
+                </PaginationItem>
+              )
+            )}
 
+            <PaginationItem>
+              <PaginationNext
+                onClick={() => page < totalPages && setPage(page + 1)}
+                aria-disabled={page === totalPages}
+                className={page === totalPages ? "pointer-events-none opacity-50" : ""}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      </div>
     </div>
   );
 }
